@@ -3,6 +3,7 @@ import { StyleSheet, View, PermissionsAndroid, Platform, Alert, TouchableOpacity
 import Mapbox, { UserTrackingMode } from '@rnmapbox/maps';
 import { useWebSocket } from '@/services/aisdataservice';
 import { Point } from 'geojson';
+import { getDistanceFromLatLonInMeters } from '../helpers/locationDistance';
 
 Mapbox.setAccessToken('pk.eyJ1IjoibWFpbmV2ZW50eHgiLCJhIjoiY21jMmJxY2Z6MDV0aTJqc2t3d2V3ZGFqdiJ9.NLDsaiK5iCH6GwDD71ZqlA');
 
@@ -106,11 +107,19 @@ const MapView = () => {
   const { data } = useWebSocket(userCoordinates);
   const cameraRef = useRef<Mapbox.Camera>(null);
   const [vessels, setVessels] = useState<Record<string, VesselData>>({});
-  // const [zoomLevel, setZoomLevel] = useState<number>(12);
 
   const nearbyVessels = useMemo(() => {
+    if (!userCoordinates) {
+      return [];
+    }
     const allVessels = Object.values(vessels);
-    return allVessels;
+    return allVessels.filter((vessel) =>
+      getDistanceFromLatLonInMeters(
+        userCoordinates.latitude,
+        userCoordinates.longitude,
+        vessel.latitude,
+        vessel.longitude
+      ) <= 10000)
   }, [vessels]);
 
   useEffect(() => {
@@ -129,12 +138,13 @@ const MapView = () => {
 
   const onLocationUptade = (location: Mapbox.Location) => {
     if (location.coords && location.coords.latitude && location.coords.longitude) {
-      setVessels({});
-      // cameraRef.current?.setCamera({
-      //   centerCoordinate: [location.coords.longitude, location.coords.latitude],
-      //   zoomLevel: 12,
-      //   animationDuration: 500,
-      // });
+      cameraRef.current?.setCamera({
+        centerCoordinate: [location.coords.longitude, location.coords.latitude],
+        zoomLevel: 12,
+        animationDuration: 500,
+      });
+
+      console.log(Object.entries(vessels).length)
 
       setUSerCoordinates({ latitude: location.coords.latitude, longitude: location.coords.longitude, radius: 10000, heading: location.coords.heading || 0 })
     }
@@ -148,8 +158,8 @@ const MapView = () => {
           zoomLevel={12}
           defaultSettings={{ zoomLevel: 12 }}
           followUserLocation={true}
-          followZoomLevel={12}
-          followUserMode={Mapbox.UserTrackingMode.FollowWithCourse}
+          followZoomLevel={13}
+          followUserMode={Mapbox.UserTrackingMode.FollowWithHeading}
         />
         <Mapbox.UserLocation animated androidRenderMode='compass' showsUserHeadingIndicator={true} onUpdate={onLocationUptade}>
           <Mapbox.CircleLayer
