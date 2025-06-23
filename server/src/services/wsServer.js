@@ -15,7 +15,7 @@ function initWebSocketServer(server) {
       try {
         const data = JSON.parse(msg);
         if (data.type === 'location-update') {
-          const { latitude, longitude, radius = 10000 } = data.payload || {};
+          const { latitude, longitude, radius } = data.payload || {};
 
           if (
             typeof latitude !== 'number' ||
@@ -43,20 +43,22 @@ function initWebSocketServer(server) {
 
     ws.on('close', () => {
       clients.delete(ws);
-      console.log('client disconected')
+      console.log('Client disconected')
     });
   });
 
   setInterval(() => {
-    console.log(clients.size)
+    console.log('Connected clients:', clients.size)
     for (const [ws, clientData] of clients.entries()) {
+      if (ws.readyState !== WebSocket.OPEN) {
+        clients.delete(ws);
+        continue;
+      }
       const { location, radius } = clientData;
 
       if (!location) continue;
 
       const { latitude, longitude } = location;
-
-      console.log(location)
 
       getNearbyVessels({ latitude, longitude, radius }).then(vessels => {
         ws.send(JSON.stringify(vessels));

@@ -5,6 +5,7 @@ import { useWebSocket } from '@/services/aisdataservice';
 import { Point } from 'geojson';
 import { getDistanceFromLatLonInMeters } from '../helpers/locationDistance';
 
+
 Mapbox.setAccessToken('pk.eyJ1IjoibWFpbmV2ZW50eHgiLCJhIjoiY21jMmJxY2Z6MDV0aTJqc2t3d2V3ZGFqdiJ9.NLDsaiK5iCH6GwDD71ZqlA');
 
 
@@ -61,7 +62,7 @@ const VesselMarker = React.memo(({ vessel }: { vessel: VesselData }) => {
         <Mapbox.CircleLayer
           id={`circle-${vessel.mmsi}`}
           style={{
-            circleRadius: 4,
+            circleRadius: 5,
             circleColor: 'blue',
           }}
         />
@@ -103,23 +104,21 @@ function lineGeoJson(vessel: VesselData): GeoJSON.Feature {
 }
 
 const MapView = () => {
-  const [userCoordinates, setUSerCoordinates] = useState<{ latitude: number, longitude: number, radius: number, heading: number }>();
-  const { data } = useWebSocket(userCoordinates);
+  const [userCoordinates, setUSerCoordinates] = useState<{ latitude: number, longitude: number, radius: number }>();
+
   const cameraRef = useRef<Mapbox.Camera>(null);
   const [vessels, setVessels] = useState<Record<string, VesselData>>({});
+
+  const { data } = useWebSocket(userCoordinates);
+  const [filterRadius, setFilterRadius] = useState(10000);
 
   const nearbyVessels = useMemo(() => {
     if (!userCoordinates) {
       return [];
     }
+
     const allVessels = Object.values(vessels);
-    return allVessels.filter((vessel) =>
-      getDistanceFromLatLonInMeters(
-        userCoordinates.latitude,
-        userCoordinates.longitude,
-        vessel.latitude,
-        vessel.longitude
-      ) <= 10000)
+    return allVessels
   }, [vessels]);
 
   useEffect(() => {
@@ -127,10 +126,23 @@ const MapView = () => {
   }, []);
 
   useEffect(() => {
-    setVessels((prev) => {
-      const updated = { ...prev };
+    if (!userCoordinates || !data) return;
+
+    setVessels(() => {
+      const updated: Record<number, VesselData> = {};
+
       for (const vessel of data) {
+        const distance = getDistanceFromLatLonInMeters(
+          userCoordinates.latitude,
+          userCoordinates.longitude,
+          vessel.latitude,
+          vessel.longitude
+        );
         updated[vessel.mmsi] = vessel;
+
+        if (distance <= filterRadius) {
+          updated[vessel.mmsi] = vessel;
+        }
       }
       return updated;
     });
@@ -144,21 +156,19 @@ const MapView = () => {
         animationDuration: 500,
       });
 
-      console.log(Object.entries(vessels).length)
-
-      setUSerCoordinates({ latitude: location.coords.latitude, longitude: location.coords.longitude, radius: 10000, heading: location.coords.heading || 0 })
+      setUSerCoordinates({ latitude: location.coords.latitude, longitude: location.coords.longitude, radius: filterRadius })
     }
   }
 
   return (
-    <>
+    <View style={styles.container}>
       <Mapbox.MapView style={styles.map} zoomEnabled={true} key={'map'} scaleBarEnabled={true}>
         <Mapbox.Camera
           ref={cameraRef}
-          zoomLevel={12}
-          defaultSettings={{ zoomLevel: 12 }}
+          zoomLevel={10}
+          defaultSettings={{ zoomLevel: 10 }}
           followUserLocation={true}
-          followZoomLevel={13}
+          followZoomLevel={10}
           followUserMode={Mapbox.UserTrackingMode.FollowWithHeading}
         />
         <Mapbox.UserLocation animated androidRenderMode='compass' showsUserHeadingIndicator={true} onUpdate={onLocationUptade}>
@@ -174,8 +184,13 @@ const MapView = () => {
           <VesselMarker key={vessel.mmsi} vessel={vessel} />
         ))}
       </Mapbox.MapView>
-    </>
-
+       <View style={styles.badgeContainer}>
+        <View style={styles.badge}>
+          <Text style={styles.text}>Nearby vessels: {nearbyVessels.length}</Text>
+          <Text style={styles.text}>Radius: {filterRadius / 1000} km</Text>
+        </View>
+      </View>
+    </View>
   );
 }
 
@@ -188,36 +203,24 @@ const styles = StyleSheet.create({
   map: {
     flex: 1
   },
-  marker: {
-    width: 20,
-    height: 20,
-    backgroundColor: 'transparent',
-    borderLeftWidth: 12,
-    borderRightWidth: 12,
-    borderBottomWidth: 20,
-    borderTopWidth: 0,
-    borderStyle: 'solid',
-    borderLeftColor: 'transparent',
-    borderRightColor: 'transparent',
-    borderBottomColor: 'blue',
-  },
-  zoomControls: {
+  badgeContainer: {
+    flex: 0,
     position: 'absolute',
-    right: 10,
-    bottom: 30,
-    justifyContent: 'space-between',
+    top: 20,
+    right: 20,
+    zIndex: 999,
   },
-  zoomButton: {
-    backgroundColor: '#fff',
-    borderRadius: 6,
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    marginVertical: 4,
+  badge: {
+    backgroundColor: 'lightgreen',
+    borderRadius: 12,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    minWidth: 24,
     alignItems: 'center',
-    elevation: 3,
+    justifyContent: 'center',
   },
-  zoomText: {
-    fontSize: 22,
-    fontWeight: 'bold',
+  text: {
+    color: 'black',
+    fontWeight: 'light',
   },
 });

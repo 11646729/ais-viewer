@@ -1,5 +1,3 @@
-import { Alert } from 'react-native';
-
 const wsURL = 'ws://10.0.2.2:8080';
 
 import { useEffect, useRef, useState } from 'react';
@@ -7,23 +5,24 @@ import { useEffect, useRef, useState } from 'react';
 export const useWebSocket = (coordinates?: { latitude: number, longitude: number, radius: number }) => {
   const ws = useRef<WebSocket>(undefined);
   const [data, setData] = useState<Array<any>>([]);
+  const userCoordinates = useRef<{ latitude: number, longitude: number, radius: number }>(coordinates);
 
   useEffect(() => {
-    if (coordinates) {
-      sendMessage();
+    if (coordinates !== undefined) {
+      userCoordinates.current = coordinates;
+      sendLocationUpdate();
     }
-
-  }, [coordinates])
+  }, [coordinates]);
 
   const retryTimeout = useRef<number>(undefined);
   const retryInterval = useRef(1000);
   const maxRetryInterval = 30000;
 
-  const sendMessage = () => {
+  const sendLocationUpdate = () => {
     if (ws.current?.readyState === WebSocket.OPEN) {
       const message = {
         type: 'location-update',
-        payload: coordinates
+        payload: userCoordinates.current
       }
       ws.current.send(JSON.stringify(message))
     }
@@ -34,15 +33,18 @@ export const useWebSocket = (coordinates?: { latitude: number, longitude: number
 
     ws.current.onopen = () => {
       console.log('✅ WebSocket connected');
-      sendMessage();
+
       retryInterval.current = 1000;
+
+      if (userCoordinates.current) {
+        sendLocationUpdate();
+      }
     };
 
     ws.current.onmessage = (e) => {
       try {
-        console.log(e.data)
         const message = JSON.parse(e.data);
-        
+
         setData(message);
       } catch (err) {
         console.error('Error parsing WS message:', err);
@@ -52,7 +54,6 @@ export const useWebSocket = (coordinates?: { latitude: number, longitude: number
     ws.current.onerror = (e) => {
       console.log('❌ WebSocket errors', e);
       ws.current?.close();
-      scheduleReconnect();
     };
 
     ws.current.onclose = (e) => {
@@ -72,7 +73,9 @@ export const useWebSocket = (coordinates?: { latitude: number, longitude: number
   };
 
   useEffect(() => {
-    connect();
+    if (!ws.current) {
+      connect();
+    }
 
     return () => {
       clearTimeout(retryTimeout.current);
