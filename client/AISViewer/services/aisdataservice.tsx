@@ -1,11 +1,13 @@
 const wsURL = 'ws://10.0.2.2:8080';
 
+import { UserCoordinates } from '@/models/user';
+import { Vessel } from '@/models/vessel';
 import { useEffect, useRef, useState } from 'react';
 
-export const useWebSocket = (coordinates?: { latitude: number, longitude: number, radius: number }) => {
+export const useWebSocket = (coordinates?: UserCoordinates) => {
   const ws = useRef<WebSocket>(undefined);
-  const [data, setData] = useState<Array<any>>([]);
-  const userCoordinates = useRef<{ latitude: number, longitude: number, radius: number }>(coordinates);
+  const [data, setData] = useState<Vessel[]>([]);
+  const userCoordinates = useRef<UserCoordinates>(coordinates);
 
   useEffect(() => {
     if (coordinates !== undefined) {

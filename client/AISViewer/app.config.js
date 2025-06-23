@@ -1,4 +1,6 @@
-{
+import "dotenv/config";
+
+export default {
   "expo": {
     "name": "AISViewer",
     "slug": "AISViewer",
@@ -38,7 +40,7 @@
       [
         "@rnmapbox/maps",
         {
-          "RNMapboxMapsDownloadToken": "sk.eyJ1IjoibWFpbmV2ZW50eHgiLCJhIjoiY21jMmJ2amlnMDZzaTJrc2ljcWEzYjIwZSJ9.yjG6mV22nQX0pPHZoEqY1A"
+          "RNMapboxMapsDownloadToken": process.env.MAPBOX_DOWNLOAD_TOKEN
         }
       ]
     ],
