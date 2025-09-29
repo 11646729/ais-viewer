@@ -1,17 +1,17 @@
 // services/messageParser.js
-const db = require('../db');
+import { query } from "../db.js"
 
 async function getNearbyVessels({ latitude, longitude, radius }) {
   try {
     if (
-      typeof latitude !== 'number' ||
-      typeof longitude !== 'number' ||
-      typeof radius !== 'number'
+      typeof latitude !== "number" ||
+      typeof longitude !== "number" ||
+      typeof radius !== "number"
     ) {
-      return;
+      return
     }
 
-    const result = await db.query(
+    const result = await query(
       `
       SELECT 
         mmsi,
@@ -31,12 +31,12 @@ async function getNearbyVessels({ latitude, longitude, radius }) {
       );
       `,
       [longitude, latitude, radius]
-    );
+    )
 
-    return result.rows;
+    return result.rows
   } catch (err) {
-    console.error('Failed to fetch vessels:', err);
+    console.error("Failed to fetch vessels:", err)
   }
 }
 
-module.exports = { getNearbyVessels };
+export { getNearbyVessels }

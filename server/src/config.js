@@ -1,7 +1,6 @@
-require('dotenv').config();
+import dotenv from "dotenv"
+dotenv.config()
 
-module.exports = {
-  AIS_API_KEY: process.env.AIS_API_KEY,
-  DB_URI: process.env.DB_URI,
-  PORT: process.env.PORT || 3000,
-};
+export const AIS_API_KEY = process.env.AIS_API_KEY
+export const DB_URI = process.env.DB_URI
+export const PORT = process.env.PORT || 3000
