@@ -1,6 +1,6 @@
 // socketServer.js
 import { WebSocketServer } from "ws"
-import { getNearbyVessels } from "./queryVessels.js"
+// import { getNearbyVessels } from "./queryVessels.js"
 
 const clients = new Map()
 
