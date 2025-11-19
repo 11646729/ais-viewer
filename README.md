@@ -2,4 +2,4 @@
 
 Real-Time Vessel Tracking App Built with React Native & Mapbox
 
-Test
+I cloned this project from Anton Antonov then extended it
