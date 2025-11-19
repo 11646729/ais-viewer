@@ -7,7 +7,7 @@ import { prepareEmptyAisVesselsTable } from "./services/aisvesselsTable.js"
 
 function handlePositionReport(report) {
   // Uncomment the line below to check if data is being received
-  console.log("Received vessel position:", report)
+  console.log("Received vessel position:", report.MetaData?.ShipName)
 
   // TODO: Save to DB here
   parseAISMessage(report)

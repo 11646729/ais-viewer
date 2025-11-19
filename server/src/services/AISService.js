@@ -20,7 +20,7 @@ function connectToAISStream(onMessage) {
         ],
       ],
       // FilterMessageTypes: ["PositionReport"],
-      FiltersShipMMSI: ["215712000"], // Empty array means no filtering; receive all vessels
+      FiltersShipMMSI: [], // Empty array means no filtering; receive all vessels
       // FiltersShipMMSI: ["311000807", "310812000", "205011000", "477886700"], // Virgin Cruises - Scarlet Lady & Discovery Princess
     }
     socket.send(JSON.stringify(subscriptionMessage))
