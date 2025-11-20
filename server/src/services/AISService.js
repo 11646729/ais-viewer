@@ -19,7 +19,7 @@ function connectToAISStream(onMessage) {
           [90, 180],
         ],
       ],
-      // FilterMessageTypes: ["PositionReport"],
+      FilterMessageTypes: ["PositionReport"],
       FiltersShipMMSI: [], // Empty array means no filtering; receive all vessels
       // FiltersShipMMSI: ["311000807", "310812000", "205011000", "477886700"], // Virgin Cruises - Scarlet Lady & Discovery Princess
     }
