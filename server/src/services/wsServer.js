@@ -1,6 +1,6 @@
-// socketServer.js
+// services/wsServer.js
 import { WebSocketServer } from "ws"
-// import { getNearbyVessels } from "./queryVessels.js"
+import { getNearbyVessels } from "./queryVessels.js"
 
 const clients = new Map()
 
@@ -57,17 +57,17 @@ function initWebSocketServer(server, intervalMs = 10000) {
 
       const { latitude, longitude } = location
 
-      // getNearbyVessels({ latitude, longitude, radius })
-      //   .then((vessels) => {
-      //     try {
-      //       ws.send(JSON.stringify(vessels))
-      //     } catch (sendErr) {
-      //       console.error("Error sending vessel data:", sendErr)
-      //     }
-      //   })
-      //   .catch((err) => {
-      //     console.error("Error sending vessel data:", err)
-      //   })
+      getNearbyVessels({ latitude, longitude, radius })
+        .then((vessels) => {
+          try {
+            ws.send(JSON.stringify(vessels))
+          } catch (sendErr) {
+            console.error("Error sending vessel data:", sendErr)
+          }
+        })
+        .catch((err) => {
+          console.error("Error sending vessel data:", err)
+        })
     }
   }, intervalMs)
 }

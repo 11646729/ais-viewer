@@ -1,4 +1,4 @@
-// services/messageParser.js
+// services/queryVessels.js
 import { query } from "../db.js"
 
 async function getNearbyVessels({ latitude, longitude, radius }) {
