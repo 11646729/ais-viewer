@@ -11,7 +11,7 @@ function handlePositionReport(report) {
     report.MetaData?.ShipName + " " + report.MetaData?.time_utc
   )
 
-  // TODO: Save to DB here
+  // Save to DB here
   parseAISMessage(report)
 }
 

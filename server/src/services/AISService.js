@@ -21,7 +21,7 @@ function connectToAISStream(onMessage) {
         ],
       ],
       FilterMessageTypes: ["PositionReport"],
-      FiltersShipMMSI: ["235089435"], // Empty array means no filtering; receive all vessels
+      FiltersShipMMSI: ["212801000"], // Empty array means no filtering; receive all vessels
     }
     socket.send(JSON.stringify(subscriptionMessage))
   }

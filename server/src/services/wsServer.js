@@ -5,6 +5,8 @@ import { getNearbyVessels } from "./queryVessels.js"
 const clients = new Map()
 
 function initWebSocketServer(server, intervalMs = 10000) {
+  console.log("Initializing WebSocket server...")
+
   const wss = new WebSocketServer({ server })
 
   wss.on("connection", (ws) => {
