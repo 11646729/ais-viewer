@@ -4,7 +4,7 @@ import { AIS_API_KEY } from "../config.js"
 
 let socket
 
-function connectToAISStream(onMessage) {
+const connectToAISStream = (onMessage) => {
   socket = new WebSocket("wss://stream.aisstream.io/v0/stream", {
     headers: {
       Authorization: `Bearer ${AIS_API_KEY}`,
@@ -21,7 +21,7 @@ function connectToAISStream(onMessage) {
         ],
       ],
       FilterMessageTypes: ["PositionReport"],
-      FiltersShipMMSI: ["212801000"], // Empty array means no filtering; receive all vessels
+      // FiltersShipMMSI: ["212801000"], // Empty array means no filtering; receive all vessels
     }
     socket.send(JSON.stringify(subscriptionMessage))
   }
