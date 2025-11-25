@@ -1,4 +1,6 @@
+// =============================================================
 // services/messageParser.js
+// =============================================================
 import { query } from "../db.js"
 
 async function parseAISMessage(data) {
