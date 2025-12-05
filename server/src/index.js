@@ -13,10 +13,11 @@ const handlePositionReport = (report) => {
   if (!report) return
 
   // Uncomment the line below to check if data is being received
-  console.log(
-    "Received vessel position:",
-    report.MetaData?.ShipName + " " + report.MetaData?.time_utc
-  )
+  // console.log(
+  //   "Received vessel position:",
+  //   report.MetaData?.ShipName + " " + report.MetaData?.MMSI
+  // )
+  console.log(report)
 
   // Save to DB here
   parseAISMessage(report)

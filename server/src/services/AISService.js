@@ -25,7 +25,7 @@ const connectToAISStream = (onMessage) => {
           [54.5995, -5.54403],
         ],
       ],
-      FilterMessageTypes: ["PositionReport"],
+      FilterMessageTypes: ["ShipStaticData"], // ["PositionReport"],
       FiltersShipMMSI: [], // Empty array means no filtering; receive all vessels
     }
     socket.send(JSON.stringify(subscriptionMessage))
@@ -33,6 +33,9 @@ const connectToAISStream = (onMessage) => {
 
   socket.onmessage = function (event) {
     let aisMessage = JSON.parse(event.data)
+
+    console.log("[AIS] Received message:", aisMessage)
+
     onMessage(aisMessage)
   }
 
