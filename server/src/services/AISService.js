@@ -18,15 +18,15 @@ const connectToAISStream = (onMessage) => {
       Apikey: AIS_API_KEY,
       BoundingBoxes: [
         [
-          // [-90, -180],
-          // [90, 180],
+          [-90, -180],
+          [90, 180],
           // Area around home
-          [54.717, -5.95288],
-          [54.5995, -5.54403],
+          // [54.717, -5.95288],
+          // [54.5995, -5.54403],
         ],
       ],
-      FilterMessageTypes: ["ShipStaticData"], // ["PositionReport"],
-      FiltersShipMMSI: [], // Empty array means no filtering; receive all vessels
+      FilterMessageTypes: ["PositionReport"], // ["ShipStaticData"],
+      FiltersShipMMSI: ["235089435"], // Empty array means no filtering; receive all vessels
     }
     socket.send(JSON.stringify(subscriptionMessage))
   }
@@ -34,7 +34,7 @@ const connectToAISStream = (onMessage) => {
   socket.onmessage = function (event) {
     let aisMessage = JSON.parse(event.data)
 
-    console.log("[AIS] Received message:", aisMessage)
+    // console.log("[AIS] Received message:", aisMessage)
 
     onMessage(aisMessage)
   }

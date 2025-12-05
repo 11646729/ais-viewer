@@ -17,7 +17,6 @@ const handlePositionReport = (report) => {
   //   "Received vessel position:",
   //   report.MetaData?.ShipName + " " + report.MetaData?.MMSI
   // )
-  console.log(report)
 
   // Save to DB here
   parseAISMessage(report)

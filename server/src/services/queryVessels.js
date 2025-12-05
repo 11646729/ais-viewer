@@ -25,7 +25,7 @@ async function getNearbyVessels({ latitude, longitude, radius }) {
         latitude,
         longitude,
         ST_AsGeoJSON(geom)::json AS geometry
-        FROM vessels
+        FROM aisvessels
       WHERE ST_DWithin(
         geom::geography,
         ST_SetSRID(ST_MakePoint($1, $2), 4326)::geography,
