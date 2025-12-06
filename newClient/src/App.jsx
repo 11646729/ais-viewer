@@ -8,16 +8,26 @@ function useAisMessages(coordinates) {
   const [connected, setConnected] = useState(false)
   const ws = useRef(null)
   const coordsRef = useRef(coordinates)
+  const reconnectTimeout = useRef(null)
+  const isMounted = useRef(true)
 
   useEffect(() => {
     coordsRef.current = coordinates
   }, [coordinates])
 
   useEffect(() => {
+    isMounted.current = true
+
     const connect = () => {
+      if (!isMounted.current) return
+
       ws.current = new WebSocket(WS_URL)
 
       ws.current.onopen = () => {
+        if (!isMounted.current) {
+          ws.current?.close()
+          return
+        }
         setConnected(true)
         console.log("✅ WebSocket connected")
 
@@ -32,8 +42,12 @@ function useAisMessages(coordinates) {
       }
 
       ws.current.onmessage = (event) => {
+        if (!isMounted.current) return
         try {
           const data = JSON.parse(event.data)
+
+          // console.log(data[0].name)
+
           setMessages(Array.isArray(data) ? data : [data])
         } catch (err) {
           console.error("Parse error:", err)
@@ -41,9 +55,10 @@ function useAisMessages(coordinates) {
       }
 
       ws.current.onclose = () => {
+        if (!isMounted.current) return
         setConnected(false)
         console.log("🔁 Reconnecting in 3s...")
-        setTimeout(connect, 3000)
+        reconnectTimeout.current = setTimeout(connect, 3000)
       }
 
       ws.current.onerror = (err) => {
@@ -55,6 +70,8 @@ function useAisMessages(coordinates) {
     connect()
 
     return () => {
+      isMounted.current = false
+      clearTimeout(reconnectTimeout.current)
       ws.current?.close()
     }
   }, [])

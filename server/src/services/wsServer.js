@@ -39,8 +39,6 @@ function initWebSocketServer(server, intervalMs = 10000) {
             location: { latitude, longitude },
             radius,
           })
-
-          // console.log("Updated client location:", clients.get(ws))
         }
       } catch (e) {
         console.error("Invalid message:", msg)
