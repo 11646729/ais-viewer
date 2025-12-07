@@ -19,8 +19,8 @@ function VesselMap({ vessel }) {
         <Map
           defaultCenter={position}
           center={position}
-          defaultZoom={12}
-          style={{ width: "100%", height: "400px" }}
+          defaultZoom={10}
+          style={{ width: "100%", height: "100%" }}
         >
           <Marker
             position={position}
