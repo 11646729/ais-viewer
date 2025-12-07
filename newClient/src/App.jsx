@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react"
 import "./App.css"
+import VesselReport from "./components/VesselReport"
 
 const WS_URL = "ws://localhost:8080"
 
@@ -102,49 +103,7 @@ function App() {
       </header>
 
       <main>
-        {!latestMessage ? (
-          <p className="empty">Waiting for vessel data...</p>
-        ) : (
-          <div className="latest-report">
-            <h2>Latest Position Report</h2>
-            <table>
-              <tbody>
-                <tr>
-                  <th>MMSI</th>
-                  <td>{latestMessage.mmsi}</td>
-                </tr>
-                <tr>
-                  <th>Name</th>
-                  <td>{latestMessage.name || "—"}</td>
-                </tr>
-                <tr>
-                  <th>Latitude</th>
-                  <td>{latestMessage.latitude?.toFixed(5)}</td>
-                </tr>
-                <tr>
-                  <th>Longitude</th>
-                  <td>{latestMessage.longitude?.toFixed(5)}</td>
-                </tr>
-                <tr>
-                  <th>SOG</th>
-                  <td>{latestMessage.sog?.toFixed(1)} knots</td>
-                </tr>
-                <tr>
-                  <th>COG</th>
-                  <td>{latestMessage.cog?.toFixed(1)}°</td>
-                </tr>
-                <tr>
-                  <th>Heading</th>
-                  <td>{latestMessage.heading}°</td>
-                </tr>
-                <tr>
-                  <th>Updated</th>
-                  <td>{new Date(latestMessage.updated_at).toLocaleString()}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        )}
+        <VesselReport vessel={latestMessage} />
       </main>
     </div>
   )
