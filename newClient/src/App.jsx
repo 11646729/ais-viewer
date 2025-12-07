@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react"
 import "./App.css"
 import VesselReport from "./components/VesselReport"
+import VesselMap from "./components/VesselMap"
 
 const WS_URL = "ws://localhost:8080"
 
@@ -102,8 +103,9 @@ function App() {
         </span>
       </header>
 
-      <main>
+      <main className="main-content">
         <VesselReport vessel={latestMessage} />
+        <VesselMap vessel={latestMessage} />
       </main>
     </div>
   )

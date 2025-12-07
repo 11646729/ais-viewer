@@ -78,7 +78,6 @@ tr:hover {
   background: #16213e;
   border-radius: 0.5rem;
   padding: 1.5rem;
-  max-width: 500px;
 }
 
 .latest-report h2 {
@@ -101,4 +100,34 @@ tr:hover {
 
 .latest-report td {
   font-size: 1rem;
+}
+
+.main-content {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.latest-report {
+  flex: 1;
+  min-width: 300px;
+}
+
+.vessel-map {
+  flex: 1;
+  min-width: 400px;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.vessel-map-placeholder {
+  flex: 1;
+  min-width: 400px;
+  height: 400px;
+  background: #16213e;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #888;
 }
