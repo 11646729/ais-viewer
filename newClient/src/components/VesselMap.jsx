@@ -22,7 +22,10 @@ function VesselMap({ vessel }) {
           defaultZoom={12}
           style={{ width: "100%", height: "400px" }}
         >
-          <Marker position={position} title={vessel.name || `MMSI: ${vessel.mmsi}`} />
+          <Marker
+            position={position}
+            title={vessel.name || `MMSI: ${vessel.mmsi}`}
+          />
         </Map>
       </APIProvider>
     </div>
