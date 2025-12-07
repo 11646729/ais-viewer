@@ -53,8 +53,6 @@ function initWebSocketServer(server, intervalMs = 10000) {
 
   setInterval(() => {
     for (const [ws, clientData] of clients.entries()) {
-      console.log(clientData)
-
       const { location, radius } = clientData
 
       if (!location) continue

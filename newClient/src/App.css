@@ -73,3 +73,32 @@ th {
 tr:hover {
   background: #16213e;
 }
+
+.latest-report {
+  background: #16213e;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  max-width: 500px;
+}
+
+.latest-report h2 {
+  margin: 0 0 1rem 0;
+  font-size: 1.125rem;
+  color: #75b798;
+}
+
+.latest-report table {
+  width: 100%;
+}
+
+.latest-report th {
+  width: 120px;
+  background: transparent;
+  color: #888;
+  text-transform: none;
+  font-size: 0.875rem;
+}
+
+.latest-report td {
+  font-size: 1rem;
+}

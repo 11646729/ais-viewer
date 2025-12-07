@@ -4,7 +4,7 @@ import "./App.css"
 const WS_URL = "ws://localhost:8080"
 
 function useAisMessages(coordinates) {
-  const [messages, setMessages] = useState([])
+  const [latestMessage, setLatestMessage] = useState(null)
   const [connected, setConnected] = useState(false)
   const ws = useRef(null)
   const coordsRef = useRef(coordinates)
@@ -45,10 +45,14 @@ function useAisMessages(coordinates) {
         if (!isMounted.current) return
         try {
           const data = JSON.parse(event.data)
-
-          // console.log(data[0].name)
-
-          setMessages(Array.isArray(data) ? data : [data])
+          // Get the latest vessel (most recent by updated_at)
+          const vessels = Array.isArray(data) ? data : [data]
+          if (vessels.length > 0) {
+            const latest = vessels.reduce((a, b) =>
+              new Date(a.updated_at) > new Date(b.updated_at) ? a : b
+            )
+            setLatestMessage(latest)
+          }
         } catch (err) {
           console.error("Parse error:", err)
         }
@@ -76,7 +80,7 @@ function useAisMessages(coordinates) {
     }
   }, [])
 
-  return { messages, connected }
+  return { latestMessage, connected }
 }
 
 function App() {
@@ -86,7 +90,7 @@ function App() {
     radius: 50000,
   })
 
-  const { messages, connected } = useAisMessages(coords)
+  const { latestMessage, connected } = useAisMessages(coords)
 
   return (
     <div className="app">
@@ -98,37 +102,48 @@ function App() {
       </header>
 
       <main>
-        {messages.length === 0 ? (
+        {!latestMessage ? (
           <p className="empty">Waiting for vessel data...</p>
         ) : (
-          <table>
-            <thead>
-              <tr>
-                <th>MMSI</th>
-                <th>Name</th>
-                <th>Latitude</th>
-                <th>Longitude</th>
-                <th>SOG</th>
-                <th>COG</th>
-                <th>Heading</th>
-                <th>Updated</th>
-              </tr>
-            </thead>
-            <tbody>
-              {messages.map((vessel) => (
-                <tr key={vessel.mmsi}>
-                  <td>{vessel.mmsi}</td>
-                  <td>{vessel.name || "—"}</td>
-                  <td>{vessel.latitude?.toFixed(5)}</td>
-                  <td>{vessel.longitude?.toFixed(5)}</td>
-                  <td>{vessel.sog?.toFixed(1)}</td>
-                  <td>{vessel.cog?.toFixed(1)}°</td>
-                  <td>{vessel.heading}°</td>
-                  <td>{new Date(vessel.updated_at).toLocaleTimeString()}</td>
+          <div className="latest-report">
+            <h2>Latest Position Report</h2>
+            <table>
+              <tbody>
+                <tr>
+                  <th>MMSI</th>
+                  <td>{latestMessage.mmsi}</td>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+                <tr>
+                  <th>Name</th>
+                  <td>{latestMessage.name || "—"}</td>
+                </tr>
+                <tr>
+                  <th>Latitude</th>
+                  <td>{latestMessage.latitude?.toFixed(5)}</td>
+                </tr>
+                <tr>
+                  <th>Longitude</th>
+                  <td>{latestMessage.longitude?.toFixed(5)}</td>
+                </tr>
+                <tr>
+                  <th>SOG</th>
+                  <td>{latestMessage.sog?.toFixed(1)} knots</td>
+                </tr>
+                <tr>
+                  <th>COG</th>
+                  <td>{latestMessage.cog?.toFixed(1)}°</td>
+                </tr>
+                <tr>
+                  <th>Heading</th>
+                  <td>{latestMessage.heading}°</td>
+                </tr>
+                <tr>
+                  <th>Updated</th>
+                  <td>{new Date(latestMessage.updated_at).toLocaleString()}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         )}
       </main>
     </div>
