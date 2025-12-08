@@ -1,0 +1,11 @@
+.vesselscontainer {
+  display: flex;
+
+  .vesselsreportcontainer {
+    flex: 2;
+  }
+
+  .vesselsmapcontainer {
+    flex: 2;
+  }
+}

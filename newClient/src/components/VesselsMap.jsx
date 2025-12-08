@@ -1,15 +1,4 @@
 import { APIProvider, Map, Marker } from "@vis.gl/react-google-maps"
-// .golfcoursescontainer {
-//   display: flex;
-
-//   .golfcoursestablecontainer {
-//     flex: 2;
-//   }
-
-//   .golfcoursesmapcontainer {
-//     flex: 2;
-//   }
-// }
 
 function VesselMap({ vessel }) {
   if (!vessel || !vessel.latitude || !vessel.longitude) {

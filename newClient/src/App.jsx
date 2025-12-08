@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from "react"
+import VesselsReport from "./components/VesselsReport"
+import VesselsMap from "./components/VesselsMap"
 import "./App.css"
-import VesselReport from "./components/VesselReport"
-import VesselMap from "./components/VesselMap"
+import "./styles/vessels.scss"
 
 const WS_URL = "ws://localhost:8080"
 
@@ -104,8 +105,8 @@ function App() {
       </header>
 
       <main className="main-content">
-        <VesselReport vessel={latestMessage} />
-        <VesselMap vessel={latestMessage} />
+        <VesselsReport vessel={latestMessage} />
+        <VesselsMap vessel={latestMessage} />
       </main>
     </div>
   )
