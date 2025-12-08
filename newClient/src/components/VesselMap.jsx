@@ -1,6 +1,15 @@
 import { APIProvider, Map, Marker } from "@vis.gl/react-google-maps"
+// .golfcoursescontainer {
+//   display: flex;
 
-const API_KEY = "AIzaSyDGo8SPcAF8hOBnNhqR1398qUYQrtkgIHQ"
+//   .golfcoursestablecontainer {
+//     flex: 2;
+//   }
+
+//   .golfcoursesmapcontainer {
+//     flex: 2;
+//   }
+// }
 
 function VesselMap({ vessel }) {
   if (!vessel || !vessel.latitude || !vessel.longitude) {
@@ -15,7 +24,7 @@ function VesselMap({ vessel }) {
 
   return (
     <div className="vessel-map">
-      <APIProvider apiKey={API_KEY}>
+      <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
         <Map
           defaultCenter={position}
           center={position}
