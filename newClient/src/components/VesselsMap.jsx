@@ -1,5 +1,4 @@
 import { APIProvider, Map, AdvancedMarker } from "@vis.gl/react-google-maps"
-// import "../styles/vessels.scss"
 
 // const VesselsMapTitle = "Vessel Locations"
 
@@ -7,9 +6,9 @@ const mapContainerStyle = {
   height: "600px",
   width: "600px", //"100%",
   border: "1px solid #ccc",
-  marginLeft: 0,
-  marginRight: 0,
-  marginBottom: 0,
+  marginLeft: 20,
+  marginRight: 20,
+  marginBottom: 20,
 }
 
 const CustomCircle = ({
