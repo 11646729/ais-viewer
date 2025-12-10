@@ -30,7 +30,7 @@ const CustomCircle = ({
   />
 )
 
-function VesselMap({ vessel }) {
+const VesselMap = ({ vessel }) => {
   if (!vessel || !vessel.latitude || !vessel.longitude) {
     return (
       <div className="vessel-map-placeholder">
@@ -45,10 +45,17 @@ function VesselMap({ vessel }) {
     <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
       {/* <Title>{VesselsMapTitle}</Title> */}
       <Map
-        defaultZoom={10}
-        defaultCenter={position}
-        center={position}
-        style={mapContainerStyle} //{{} width: "100%", height: "100%" }}
+        defaultZoom={parseInt(import.meta.env.VITE_DEFAULT_ZOOM) || 10}
+        defaultCenter={{
+          lat: parseFloat(import.meta.env.VITE_HOME_LATITUDE),
+          lng: parseFloat(import.meta.env.VITE_HOME_LONGITUDE),
+        }}
+        enter={{
+          lat: parseFloat(import.meta.env.VITE_HOME_LATITUDE),
+          lng: parseFloat(import.meta.env.VITE_HOME_LONGITUDE),
+        }}
+        // center={position}
+        style={mapContainerStyle}
         mapId="vessels-map"
         disableDefaultUI={true}
         zoomControl={true}
