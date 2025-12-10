@@ -1,4 +1,35 @@
-import { APIProvider, Map, Marker } from "@vis.gl/react-google-maps"
+import { APIProvider, Map, AdvancedMarker } from "@vis.gl/react-google-maps"
+// import "../styles/vessels.scss"
+
+// const VesselsMapTitle = "Vessel Locations"
+
+const mapContainerStyle = {
+  height: "600px",
+  width: "600px", //"100%",
+  border: "1px solid #ccc",
+  marginLeft: 0,
+  marginRight: 0,
+  marginBottom: 0,
+}
+
+const CustomCircle = ({
+  color = "#78a32e",
+  size = 15,
+  borderColor = "#ffffff",
+  borderWidth = 1,
+}) => (
+  <div
+    style={{
+      width: `${size}px`,
+      height: `${size}px`,
+      backgroundColor: color,
+      borderRadius: "50%",
+      border: `${borderWidth}px solid ${borderColor}`,
+      boxShadow: "0 2px 4px rgba(0,0,0,0.3)",
+      cursor: "pointer",
+    }}
+  />
+)
 
 function VesselMap({ vessel }) {
   if (!vessel || !vessel.latitude || !vessel.longitude) {
@@ -12,21 +43,26 @@ function VesselMap({ vessel }) {
   const position = { lat: vessel.latitude, lng: vessel.longitude }
 
   return (
-    <div className="vessel-map">
-      <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
-        <Map
-          defaultCenter={position}
-          center={position}
-          defaultZoom={10}
-          style={{ width: "100%", height: "100%" }}
+    <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
+      {/* <Title>{VesselsMapTitle}</Title> */}
+      <Map
+        defaultZoom={10}
+        defaultCenter={position}
+        center={position}
+        style={mapContainerStyle} //{{} width: "100%", height: "100%" }}
+        mapId="vessels-map"
+        disableDefaultUI={true}
+        zoomControl={true}
+      >
+        <AdvancedMarker
+          key={position._markerId}
+          position={position}
+          // onClick={() => handleMarkerClick(position._markerId)}
         >
-          <Marker
-            position={position}
-            title={vessel.name || `MMSI: ${vessel.mmsi}`}
-          />
-        </Map>
-      </APIProvider>
-    </div>
+          <CustomCircle />
+        </AdvancedMarker>
+      </Map>
+    </APIProvider>
   )
 }
 

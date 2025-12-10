@@ -103,11 +103,15 @@ function App() {
           {connected ? "● Connected" : "○ Disconnected"}
         </span>
       </header>
-
-      <main className="main-content">
-        <VesselsReport vessel={latestMessage} />
-        <VesselsMap vessel={latestMessage} />
-      </main>
+      <div className="vesselscontainer">
+        <div className="vesselsreportcontainer">
+          <VesselsReport vessel={latestMessage} />
+        </div>
+        <div className="vesselsmapcontainer">
+          <VesselsMap vessel={latestMessage} />
+        </div>
+      </div>
+      //{" "}
     </div>
   )
 }

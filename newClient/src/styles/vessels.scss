@@ -1,11 +1,16 @@
 .vesselscontainer {
   display: flex;
+  flex-direction: row;
 
   .vesselsreportcontainer {
-    flex: 2;
+    flex: 1;
+    min-width: 200px;
+    min-height: 500px;
   }
 
   .vesselsmapcontainer {
-    flex: 2;
+    flex: 1;
+    min-width: 200px;
+    min-height: 500px;
   }
 }
