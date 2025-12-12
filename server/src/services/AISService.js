@@ -18,11 +18,11 @@ const connectToAISStream = (onMessage) => {
       Apikey: AIS_API_KEY,
       BoundingBoxes: [
         [
-          // [-90, -180],
-          // [90, 180],
+          [-90, -180],
+          [90, 180],
           // Area around home
-          [54.717, -5.95288],
-          [54.5995, -5.54403],
+          // [54.717, -5.95288],
+          // [54.5995, -5.54403],
         ],
       ],
       FilterMessageTypes: ["PositionReport"], // ["ShipStaticData"],

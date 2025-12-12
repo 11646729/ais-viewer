@@ -6,7 +6,9 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node src/index.js"
+    "start": "node src/index.js",
+    "db:postgis": "node scripts/enable-postgis.js",
+    "db:postgis:golf3": "node scripts/enable-postgis.js --uri $NEW_DB_URI"
   },
   "keywords": [],
   "author": "",
